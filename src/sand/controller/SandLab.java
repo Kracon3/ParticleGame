@@ -10,6 +10,7 @@ public class SandLab
   //add constants for particle types here
   public static final int EMPTY = 0;
   public static final int METAL = 1;
+  public static final int SAND = 2;
   
   //do not add any more fields below
   private int[][] grid;
@@ -26,10 +27,11 @@ public class SandLab
     String[] names;
     // Change this value to add more buttons
     //Step 4,6
-    names = new String[2];
+    names = new String[3];
     // Each value needs a name for the button
     names[EMPTY] = "Empty";
     names[METAL] = "Metal";
+    names[SAND] = "Sand";
     
     //1. Add code to initialize the data member grid with same dimensions
     
@@ -50,7 +52,24 @@ public class SandLab
   {
       //Step 3
    //Hint - use a nested for loop
-    
+    for (int row = 0; row < grid.length; row++)
+    {
+    	for (int col = 0; col < grid[0].length; col++)
+    	{
+    		if (grid[row][col] == EMPTY)
+    		{
+    			display.setColor(row, col, Color.BLACK);
+    		}
+    		else if (grid[row][col] == METAL)
+    		{
+    			display.setColor(row, col, Color.GRAY);
+    		}
+    		else if (grid[row][col] == SAND)
+    		{
+    			display.setColor(row, col, Color.YELLOW);
+    		}
+    	}
+    }
   }
 
   //Step 5,7
@@ -62,8 +81,7 @@ public class SandLab
     //The scalar refers to how big the value could be
     //int someRandom = (int) (Math.random() * scalar)
     //remember that you need to watch for the edges of the array
-    
-    
+	  
   }
   
   //do not modify this method!
