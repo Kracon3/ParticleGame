@@ -11,6 +11,7 @@ public class SandLab
   public static final int EMPTY = 0;
   public static final int METAL = 1;
   public static final int SAND = 2;
+  public static final int WATER = 3;
   
   //do not add any more fields below
   private int[][] grid;
@@ -27,11 +28,12 @@ public class SandLab
     String[] names;
     // Change this value to add more buttons
     //Step 4,6
-    names = new String[3];
+    names = new String[4];
     // Each value needs a name for the button
     names[EMPTY] = "Empty";
     names[METAL] = "Metal";
     names[SAND] = "Sand";
+    names[WATER] = "Water";
     
     //1. Add code to initialize the data member grid with same dimensions
     
@@ -68,6 +70,10 @@ public class SandLab
     		{
     			display.setColor(row, col, Color.YELLOW);
     		}
+    		else if (grid[row][col] == WATER)
+    		{
+    			display.setColor(row, col, Color.BLUE);
+    		}
     	}
     }
   }
@@ -82,13 +88,40 @@ public class SandLab
     //int someRandom = (int) (Math.random() * scalar)
     //remember that you need to watch for the edges of the array
 	  
-	  int randOne = (int) (Math.random() * grid.length - 1);
-	  int randTwo = (int) (Math.random() * grid[0].length);
+	  int row = (int) (Math.random() * grid.length);
+	  int col = (int) (Math.random() * grid[0].length);
 	  
-	  if (grid[randOne][randTwo] == SAND && grid[randOne + 1][randTwo] == EMPTY)
+	  int waterDirection = (int) (Math.random() * 4);
+	  
+	  if (grid[row][col] == SAND && row + 1 < grid.length && (grid[row + 1][col] == EMPTY || grid[row + 1][col] == WATER))
 	  {
-		  grid[randOne][randTwo] = EMPTY;
-		  grid[randOne + 1][randTwo] = SAND;
+		  if (grid[row + 1][col] == WATER)
+		  {
+			  grid[row][col] = WATER;
+		  }
+		  else
+		  {
+			  grid[row][col] = EMPTY;
+		  }
+		  grid[row + 1][col] = SAND;
+	  }
+	  else if (grid[row][col] == WATER)
+	  {
+		  if ((waterDirection == 0 || waterDirection == 1) && row + 1 < grid.length && grid[row + 1][col] == EMPTY)
+		  {
+			  grid[row][col] = EMPTY;
+			  grid[row + 1][col] = WATER;
+		  }
+		  else if (waterDirection == 2 && col - 1 >= 0 && grid[row][col - 1] == EMPTY)
+		  {
+			  grid[row][col] = EMPTY;
+			  grid[row][col - 1] = WATER;
+		  }
+		  else if (waterDirection == 3 && col + 1 < grid[0].length && grid[row][col + 1] == EMPTY)
+		  {
+			  grid[row][col] = EMPTY;
+			  grid[row][col + 1] = WATER;
+		  }
 	  }
   }
   
