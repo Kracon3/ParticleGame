@@ -13,6 +13,8 @@ public class SandLab
   public static final int SAND = 2;
   public static final int WATER = 3;
   public static final int ACID = 4;
+  public static final int STEAM = 5;
+  public static final int FIRE = 6;
   
   //do not add any more fields below
   private int[][] grid;
@@ -29,13 +31,15 @@ public class SandLab
     String[] names;
     // Change this value to add more buttons
     //Step 4,6
-    names = new String[5];
+    names = new String[7];
     // Each value needs a name for the button
     names[EMPTY] = "Empty";
     names[METAL] = "Metal";
     names[SAND] = "Sand";
     names[WATER] = "Water";
     names[ACID] = "Acid";
+    names[STEAM] = "Gas";
+    names[FIRE] = "Fire";
     
     //1. Add code to initialize the data member grid with same dimensions
     
@@ -80,13 +84,21 @@ public class SandLab
     		{
     			display.setColor(row, col, Color.GREEN);
     		}
+    		else if (grid[row][col] == STEAM)
+    		{
+    			display.setColor(row, col, Color.LIGHT_GRAY);
+    		}
+    		else if (grid[row][col] == FIRE)
+    		{
+    			display.setColor(row, col, Color.ORANGE);
+    		}
     	}
     }
   }
   
   private void updateSand(int row, int col)
   {
-	  if (grid[row][col] == SAND && row + 1 < grid.length && (grid[row + 1][col] == EMPTY || grid[row + 1][col] == WATER || grid[row + 1][col] == ACID))
+	  if (grid[row][col] == SAND && row + 1 < grid.length && (grid[row + 1][col] == EMPTY || grid[row + 1][col] == WATER || grid[row + 1][col] == ACID || grid[row + 1][col] == STEAM))
 	  {
 		  if (grid[row + 1][col] == WATER)
 		  {
@@ -95,6 +107,10 @@ public class SandLab
 		  else if (grid[row + 1][col] == ACID)
 		  {
 			  grid[row][col] = ACID;
+		  }
+		  else if (grid[row + 1][col] == STEAM)
+		  {
+			  grid[row][col] = STEAM;
 		  }
 		  else
 		  {
@@ -108,19 +124,52 @@ public class SandLab
   {
 	  if (grid[row][col] == WATER)
 	  {
-		  if ((waterDirection == 0 || waterDirection == 1) && row + 1 < grid.length && (grid[row + 1][col] == EMPTY || grid[row + 1][col] == ACID))
+		  if ((waterDirection == 0 || waterDirection == 1) && row + 1 < grid.length && (grid[row + 1][col] == EMPTY || grid[row + 1][col] == ACID || grid[row + 1][col] == STEAM))
 		  {
-			  grid[row][col] = EMPTY;
+			  if (grid[row + 1][col] == STEAM)
+			  {
+				  grid[row][col] = STEAM;
+			  }
+			  else if (grid[row + 1][col] == ACID)
+			  {
+				  grid[row][col] = ACID;
+			  }
+			  else
+			  {
+				  grid[row][col] = EMPTY;
+			  }
 			  grid[row + 1][col] = WATER;
 		  }
 		  if (waterDirection == 2 && col - 1 >= 0 && grid[row][col - 1] == EMPTY)
 		  {
-			  grid[row][col] = EMPTY;
+			  if (grid[row][col - 1] == STEAM)
+			  {
+				  grid[row][col] = STEAM;
+			  }
+			  else if (grid[row][col - 1] == ACID)
+			  {
+				  grid[row][col] = ACID;
+			  }
+			  else
+			  {
+				  grid[row][col] = EMPTY;
+			  }
 			  grid[row][col - 1] = WATER;
 		  }
 		  if (waterDirection == 3 && col + 1 < grid[0].length && grid[row][col + 1] == EMPTY)
 		  {
-			  grid[row][col] = EMPTY;
+			  if (grid[row][col + 1] == STEAM)
+			  {
+				  grid[row][col] = STEAM;
+			  }
+			  else if (grid[row][col + 1] == ACID)
+			  {
+				  grid[row][col] = ACID;
+			  }
+			  else
+			  {
+				  grid[row][col] = EMPTY;
+			  }
 			  grid[row][col + 1] = WATER;
 		  }
 	  }
@@ -164,6 +213,53 @@ public class SandLab
 	  }
   }
   
+  private void updateGas(int row, int col, int waterDirection)
+  {
+	  if (grid[row][col] == STEAM)
+	  {
+		  if ((waterDirection == 0 || waterDirection == 1) && row - 1 >= 0 && (grid[row - 1][col] == EMPTY))
+		  {
+			  grid[row][col] = EMPTY;
+			  grid[row - 1][col] = STEAM;
+		  }
+		  if (waterDirection == 2 && col - 1 >= 0 && grid[row][col - 1] == EMPTY)
+		  {
+			  grid[row][col] = EMPTY;
+			  grid[row][col - 1] = STEAM;
+		  }
+		  if (waterDirection == 3 && col + 1 < grid[0].length && grid[row][col + 1] == EMPTY)
+		  {
+			  grid[row][col] = EMPTY;
+			  grid[row][col + 1] = STEAM;
+		  }
+	  }
+  }
+  private void updateFire(int row, int col, int waterDirection)
+  {
+	  if (grid[row][col] == FIRE)
+	  {
+		  if (waterDirection == 0)
+		  {
+			  grid[row][col] = EMPTY;
+		  }
+		  if (waterDirection == 1 && row - 1 >= 0 && (grid[row - 1][col] == EMPTY))
+		  {
+			  grid[row][col] = EMPTY;
+			  grid[row - 1][col] = FIRE;
+		  }
+		  if (waterDirection == 2 && col - 1 >= 0 && grid[row][col - 1] == EMPTY)
+		  {
+			  grid[row][col] = EMPTY;
+			  grid[row][col - 1] = FIRE;
+		  }
+		  if (waterDirection == 3 && col + 1 < grid[0].length && grid[row][col + 1] == EMPTY)
+		  {
+			  grid[row][col] = EMPTY;
+			  grid[row][col + 1] = FIRE;
+		  }
+	  }
+  }
+  
   //Step 5,7
   //called repeatedly.
   //causes one random particle in grid to maybe do something.
@@ -177,13 +273,17 @@ public class SandLab
 	  int row = (int) (Math.random() * grid.length);
 	  int col = (int) (Math.random() * grid[0].length);
 	  
-	  int waterDirection = (int) (Math.random() * 4);
+	  int randDirection = (int) (Math.random() * 4);
 	  
 	  updateSand(row, col);
 	  
-	  updateWater(row, col, waterDirection);
+	  updateWater(row, col, randDirection);
 	  
-	  updateAcid(row, col, waterDirection);
+	  updateAcid(row, col, randDirection);
+	  
+	  updateGas(row, col, randDirection);
+	  
+	  updateFire(row, col, randDirection);
   }
   
   //do not modify this method!
