@@ -33,12 +33,12 @@ public class SandLab
     //Step 4,6
     names = new String[7];
     // Each value needs a name for the button
-    names[EMPTY] = "Empty";
+    names[EMPTY] = "Erase";
     names[METAL] = "Metal";
     names[SAND] = "Sand";
     names[WATER] = "Water";
     names[ACID] = "Acid";
-    names[STEAM] = "Gas";
+    names[STEAM] = "Steam";
     names[FIRE] = "Fire";
     
     //1. Add code to initialize the data member grid with same dimensions
@@ -238,26 +238,46 @@ public class SandLab
   {
 	  if (grid[row][col] == FIRE)
 	  {
-		  if (waterDirection == 0)
+		  if (waterDirection == 1 && row - 1 >= 0 && grid[row - 1][col] == WATER)
 		  {
 			  grid[row][col] = EMPTY;
+		  	  grid[row - 1][col] = STEAM;
 		  }
-		  if (waterDirection == 1 && row - 1 >= 0 && (grid[row - 1][col] == EMPTY))
+		  else if (waterDirection == 2 && col - 1 >= 0 && grid[row][col - 1] == WATER)
 		  {
 			  grid[row][col] = EMPTY;
-			  grid[row - 1][col] = FIRE;
+		  	  grid[row][col - 1] = STEAM;
 		  }
-		  if (waterDirection == 2 && col - 1 >= 0 && grid[row][col - 1] == EMPTY)
+		  else if (waterDirection == 3 && col + 1 < grid[0].length && grid[row][col + 1] == WATER)
 		  {
 			  grid[row][col] = EMPTY;
-			  grid[row][col - 1] = FIRE;
+		  	  grid[row][col + 1] = STEAM;
 		  }
-		  if (waterDirection == 3 && col + 1 < grid[0].length && grid[row][col + 1] == EMPTY)
+		  else
 		  {
-			  grid[row][col] = EMPTY;
-			  grid[row][col + 1] = FIRE;
+			 if (waterDirection == 0)
+			 {
+				 grid[row][col] = EMPTY;
+			 }
+			 if (waterDirection == 1 && row - 1 >= 0 && grid[row - 1][col] == EMPTY)
+			 {
+			  	 grid[row][col] = EMPTY;
+			  	 grid[row - 1][col] = FIRE;
+			 }
+			 if (waterDirection == 2 && col - 1 >= 0 && grid[row][col - 1] == EMPTY)
+			 {
+				 grid[row][col] = EMPTY;
+				 grid[row][col - 1] = FIRE;
+		  	 }
+		     if (waterDirection == 3 && col + 1 < grid[0].length && grid[row][col + 1] == EMPTY)
+			 {
+			  	 grid[row][col] = EMPTY;
+		 		 grid[row][col + 1] = FIRE;
+			 }
 		  }
+		    
 	  }
+	  
   }
   
   //Step 5,7
