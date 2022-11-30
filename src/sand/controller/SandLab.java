@@ -82,6 +82,14 @@ public class SandLab
     //int someRandom = (int) (Math.random() * scalar)
     //remember that you need to watch for the edges of the array
 	  
+	  int randOne = (int) (Math.random() * grid.length - 1);
+	  int randTwo = (int) (Math.random() * grid[0].length);
+	  
+	  if (grid[randOne][randTwo] == SAND && grid[randOne + 1][randTwo] == EMPTY)
+	  {
+		  grid[randOne][randTwo] = EMPTY;
+		  grid[randOne + 1][randTwo] = SAND;
+	  }
   }
   
   //do not modify this method!
