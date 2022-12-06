@@ -9,12 +9,15 @@ public class SandLab
   //Step 4,6
   //add constants for particle types here
   public static final int EMPTY = 0;
-  public static final int METAL = 1;
+  public static final int PLASMABLASTPRIME = 1;
   public static final int SAND = 2;
   public static final int WATER = 3;
   public static final int ACID = 4;
   public static final int STEAM = 5;
   public static final int FIRE = 6;
+  public static final int METAL = 7;
+  public static final int PLASMABLASTUP = 8;
+  public static final int PLASMABLASTDOWN = 9;
   
   //do not add any more fields below
   private int[][] grid;
@@ -31,15 +34,17 @@ public class SandLab
     String[] names;
     // Change this value to add more buttons
     //Step 4,6
-    names = new String[7];
+    names = new String[8];
     // Each value needs a name for the button
     names[EMPTY] = "Erase";
+    names[PLASMABLASTPRIME] = "Vaporizer";
     names[METAL] = "Metal";
     names[SAND] = "Sand";
     names[WATER] = "Water";
     names[ACID] = "Acid";
     names[STEAM] = "Steam";
     names[FIRE] = "Fire";
+    
     
     //1. Add code to initialize the data member grid with same dimensions
     
@@ -92,6 +97,18 @@ public class SandLab
     		{
     			display.setColor(row, col, Color.ORANGE);
     		}
+    		else if (grid[row][col] == PLASMABLASTPRIME)
+    		{
+    			display.setColor(row, col, Color.CYAN);
+    		}
+    		else if (grid[row][col] == PLASMABLASTUP)
+    		{
+    			display.setColor(row, col, Color.CYAN);
+    		}
+    		else if (grid[row][col] == PLASMABLASTDOWN)
+    		{
+    			display.setColor(row, col, Color.CYAN);
+    		}
     	}
     }
   }
@@ -119,7 +136,6 @@ public class SandLab
 		  grid[row + 1][col] = SAND;
 	  }
   }
-  
   private void updateWater(int row, int col, int waterDirection)
   {
 	  if (grid[row][col] == WATER)
@@ -174,7 +190,6 @@ public class SandLab
 		  }
 	  }
   }
-
   private void updateAcid(int row, int col, int waterDirection)
   {
 	  if (grid[row][col] == ACID)
@@ -194,6 +209,7 @@ public class SandLab
 			  grid[row][col] = EMPTY;
 			  grid[row][col + 1] = ACID;
 		  }
+		  
 		  //unique acid stuff
 		  if ((waterDirection == 0 || waterDirection == 1) && row + 1 < grid.length && grid[row + 1][col] != ACID)
 		  {
@@ -212,7 +228,6 @@ public class SandLab
 		  }
 	  }
   }
-  
   private void updateGas(int row, int col, int waterDirection)
   {
 	  if (grid[row][col] == STEAM)
@@ -279,6 +294,41 @@ public class SandLab
 	  }
 	  
   }
+  private void updateVaporizer(int row, int col)
+  {
+	  if (grid[row][col] == PLASMABLASTPRIME)
+	  {
+		  if (row - 1 >= 0)
+		  {
+			  grid[row - 1][col] = PLASMABLASTUP;
+		  }
+		  if (row + 1 < grid.length)
+		  {
+			  grid[row + 1][col] = PLASMABLASTDOWN;
+		  }
+		  
+		  grid[row][col] = EMPTY;
+	  }
+	  
+	  if (grid[row][col] == PLASMABLASTUP)
+	  {
+		  if (row - 1 >= 0)
+		  {
+			  grid[row - 1][col] = PLASMABLASTUP;
+		  }
+		  grid[row][col] = EMPTY;
+	  }
+	  if (grid[row][col] == PLASMABLASTDOWN)
+	  {
+		  if (row + 1 < grid.length)
+		  {
+			  grid[row + 1][col] = PLASMABLASTDOWN;
+		  }
+		  
+		  grid[row][col] = EMPTY;
+	  }
+	  
+  }
   
   //Step 5,7
   //called repeatedly.
@@ -294,6 +344,8 @@ public class SandLab
 	  int col = (int) (Math.random() * grid[0].length);
 	  
 	  int randDirection = (int) (Math.random() * 4);
+	  
+	  updateVaporizer(row, col);
 	  
 	  updateSand(row, col);
 	  
