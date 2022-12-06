@@ -19,6 +19,7 @@ public class SandLab
   public static final int PLASMABLASTUP = 8;
   public static final int PLASMABLASTDOWN = 9;
   
+  
   //do not add any more fields below
   private int[][] grid;
   private SandDisplay display;
@@ -44,7 +45,6 @@ public class SandLab
     names[ACID] = "Acid";
     names[STEAM] = "Steam";
     names[FIRE] = "Fire";
-    
     
     //1. Add code to initialize the data member grid with same dimensions
     
